@@ -1,0 +1,63 @@
+body { font-family: monospace; }
+#logContainer {
+  height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+#logTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+#logTable th, #logTable td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: left;
+}
+#logTable thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f0f0f0;
+  z-index: 1;
+}
+button, input[type="file"] { 
+  margin: 5px; 
+  background-color: #f0f0f0; 
+  color: #000; 
+  border: 1px solid #ccc; 
+  padding: 5px 10px;
+  cursor: pointer;
+}
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+}
+#sourceTable {
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  width: auto;
+  float: left;
+}
+#sourceTable th, #sourceTable td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: left;
+}
+#clear {
+  clear: both;
+}
+#logSection {
+  margin-bottom: 20px;
+}
+@media (prefers-color-scheme: dark) {
+  body { background-color: #121212; color: #e0e0e0; }
+  #logContainer, #sourceTable { border-color: #444; }
+  #logTable th, #logTable td, #sourceTable th, #sourceTable td { border-color: #444; }
+  #logTable thead th {
+    background-color: #333;
+  }
+  button, input[type="file"] { 
+    background-color: #333; 
+    color: #e0e0e0; 
+    border-color: #444; 
+  }
+}
