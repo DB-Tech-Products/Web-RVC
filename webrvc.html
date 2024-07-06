@@ -173,7 +173,7 @@
           try {
             const data = JSON.parse(e.target.result);
             packetsOfInterest = data.packets;
-            uploadStatus.textContent = `${packetsOfInterest.length} packet types defined`;
+            uploadStatus.textContent = `${packetsOfInterest.length} packet types defined:`;
             generatePacketDefinitionsTable(packetsOfInterest);
           } catch (error) {
             uploadStatus.textContent = 'Error parsing JSON';
@@ -190,7 +190,7 @@
 
       if (packets.length > 0) {
         const table = document.createElement('table');
-        table.style.width = '100%';
+        table.style.width = 'auto';
         table.style.borderCollapse = 'collapse';
         
         packets.forEach(packet => {
