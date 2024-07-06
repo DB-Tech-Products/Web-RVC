@@ -1,27 +1,194 @@
 {
   "packets": [
     {
+      "name": "ADDRESS_CLAIM",
+      "dgn_filter": "0x0EE00",
+      "dgn_mask": "0x1FF00",
+      "text_color": "#000000",
+      "background_color": "#FFFFFF",
+      "parameters": [
+        {"name": "serialNum_LSB", "start_bit": 0, "length": 8},
+        {"name": "serialNum_ISB", "start_bit": 8, "length": 8},
+        {"name": "serialNum_MSB", "start_bit": 16, "length": 4},
+        {"name": "manfCode_LSB", "start_bit": 20, "length": 4},
+        {"name": "manfCode", "start_bit": 24, "length": 8},
+        {"name": "nodeInstance", "start_bit": 32, "length": 3},
+        {"name": "functionInstance", "start_bit": 35, "length": 5},
+        {"name": "compatibility_1", "start_bit": 40, "length": 8},
+        {"name": "reservedBit", "start_bit": 48, "length": 1},
+        {"name": "compatibility_2", "start_bit": 49, "length": 7},
+        {"name": "compatibility_3", "start_bit": 56, "length": 4},
+        {"name": "compatibility_4", "start_bit": 60, "length": 3},
+        {"name": "arbitraryAddrCapable", "start_bit": 63, "length": 1}
+      ]
+    },
+    {
+      "name": "DM_RV",
+      "dgn_filter": "0x1FECA",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#FF0000",
+      "parameters": [
+        {"name": "operating_status_1", "start_bit": 0, "length": 2},
+        {"name": "operating_status_2", "start_bit": 2, "length": 2},
+        {"name": "yellow_lamp_status", "start_bit": 4, "length": 2},
+        {"name": "red_lamp_status", "start_bit": 6, "length": 2},
+        {"name": "DSA", "start_bit": 8, "length": 8},
+        {"name": "SPN_MSB", "start_bit": 16, "length": 8},
+        {"name": "SPN_ISB", "start_bit": 24, "length": 8},
+        {"name": "FMI", "start_bit": 32, "length": 4},
+        {"name": "SPN_LSB", "start_bit": 36, "length": 4},
+        {"name": "occurrence_count", "start_bit": 40, "length": 7},
+        {"name": "reservedBit", "start_bit": 47, "length": 1},
+        {"name": "bank_select", "start_bit": 48, "length": 4},
+        {"name": "reserved", "start_bit": 52, "length": 4}
+      ],
+      "translations": {
+        "operating_status_1": {
+          "0": "DISABLED_OFF",
+          "1": "NOT_OPERATING",
+          "4": "DISABLED_ON",
+          "5": "OPERATING"
+        },
+        "operating_status_2": {
+          "0": "DISABLED_OFF",
+          "1": "NOT_OPERATING",
+          "4": "DISABLED_ON",
+          "5": "OPERATING"
+        },
+        "yellow_lamp_status": {
+          "0": "DISABLED_OFF",
+          "1": "NOT_OPERATING",
+          "4": "DISABLED_ON",
+          "5": "OPERATING"
+        },
+        "red_lamp_status": {
+          "0": "DISABLED_OFF",
+          "1": "NOT_OPERATING",
+          "4": "DISABLED_ON",
+          "5": "OPERATING"
+        }
+      }
+    },
+    {
+      "name": "INITIAL_PACKET",
+      "dgn_filter": "0x0ECFF",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#00FF00",
+      "parameters": [
+        {"name": "reserved1", "start_bit": 0, "length": 8},
+        {"name": "length", "start_bit": 8, "length": 16},
+        {"name": "packetCount", "start_bit": 24, "length": 8},
+        {"name": "reserved2", "start_bit": 32, "length": 8},
+        {"name": "DGN_LSB", "start_bit": 40, "length": 8},
+        {"name": "DGN_ISB", "start_bit": 48, "length": 8},
+        {"name": "DGN_MSB", "start_bit": 56, "length": 1},
+        {"name": "reservedBits", "start_bit": 57, "length": 7}
+      ]
+    },
+    {
+      "name": "DATA_PACKET",
+      "dgn_filter": "0x0EBFF",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#0000FF",
+      "parameters": [
+        {"name": "packetNum", "start_bit": 0, "length": 8},
+        {"name": "data", "start_bit": 8, "length": 56}
+      ]
+    },
+    {
+      "name": "REQUEST_FOR_DGN",
+      "dgn_filter": "0x0EA00",
+      "dgn_mask": "0x1FF00",
+      "text_color": "#000000",
+      "background_color": "#FFFF00",
+      "parameters": [
+        {"name": "DGN_LSB", "start_bit": 0, "length": 8},
+        {"name": "DGN_ISB", "start_bit": 8, "length": 8},
+        {"name": "DGN_MSB", "start_bit": 16, "length": 1},
+        {"name": "reservedBits", "start_bit": 17, "length": 7},
+        {"name": "instance", "start_bit": 24, "length": 8},
+        {"name": "instanceBank", "start_bit": 32, "length": 8},
+        {"name": "reserved", "start_bit": 40, "length": 24}
+      ]
+    },
+    {
+      "name": "GENERAL_RESET",
+      "dgn_filter": "0x17F00",
+      "dgn_mask": "0x1FF00",
+      "text_color": "#000000",
+      "background_color": "#FFA500",
+      "parameters": [
+        {"name": "reboot", "start_bit": 0, "length": 2},
+        {"name": "clearFaults", "start_bit": 2, "length": 2},
+        {"name": "resetToDefaults", "start_bit": 4, "length": 2},
+        {"name": "resetStats", "start_bit": 6, "length": 2},
+        {"name": "testMode", "start_bit": 8, "length": 2},
+        {"name": "resetToOEM", "start_bit": 10, "length": 2},
+        {"name": "enterBootloader", "start_bit": 12, "length": 2},
+        {"name": "reservedBits", "start_bit": 14, "length": 2},
+        {"name": "reserved", "start_bit": 16, "length": 48}
+      ]
+    },
+    {
+      "name": "ACKNOWLEDGMENT",
+      "dgn_filter": "0x0E800",
+      "dgn_mask": "0x1FF00",
+      "text_color": "#000000",
+      "background_color": "#FFD700",
+      "parameters": [
+        {"name": "ackCode", "start_bit": 0, "length": 8},
+        {"name": "instance", "start_bit": 8, "length": 8},
+        {"name": "instanceBank", "start_bit": 16, "length": 4},
+        {"name": "reservedBits1", "start_bit": 20, "length": 4},
+        {"name": "reserved", "start_bit": 24, "length": 8},
+        {"name": "sourceAddress", "start_bit": 32, "length": 8},
+        {"name": "DGN_LSB", "start_bit": 40, "length": 8},
+        {"name": "DGN_ISB", "start_bit": 48, "length": 8},
+        {"name": "DGN_MSB", "start_bit": 56, "length": 1},
+        {"name": "reservedBits2", "start_bit": 57, "length": 7}
+      ],
+      "translations": {
+        "ackCode": {
+          "0": "ACK",
+          "1": "NAK_GENERIC",
+          "2": "NAK_DENIED",
+          "3": "NAK_CANT_RESP",
+          "4": "NAK_CMD_FORMAT",
+          "5": "NAK_RANGE",
+          "6": "NAK_PASSWORD",
+          "7": "NAK_MORE_TIME",
+          "8": "NAK_USER_OVR"
+        }
+      }
+    },
+    {
+      "name": "INSTANCE_ASSIGNMENT_STATUS",
+      "dgn_filter": "0x17C00",
+      "dgn_mask": "0x1FF00",
+      "text_color": "#000000",
+      "background_color": "#ADD8E6",
+      "parameters": [
+        {"name": "DSA", "start_bit": 0, "length": 8},
+        {"name": "baseInstance", "start_bit": 8, "length": 8},
+        {"name": "maxInstance", "start_bit": 16, "length": 8},
+        {"name": "baseInternalAddr", "start_bit": 24, "length": 16},
+        {"name": "maxInternalAddr", "start_bit": 40, "length": 16},
+        {"name": "reserved", "start_bit": 56, "length": 8}
+      ]
+    },
+    {
       "name": "DC Dimmer Command 2",
       "text_color": "#000000",
       "background_color": "#42f595",
       "dgn_mask": "1FFFF",
       "dgn_filter": "1FEDB",
       "parameters": [
-        {
-          "name": "Instance",
-          "start_bit": 0,
-          "length": 8
-        },
-        {
-          "name": "Group",
-          "start_bit": 8,
-          "length": 8
-        },
-        {
-          "name": "Duty Cycle",
-          "start_bit": 16,
-          "length": 8
-        },
+        {"name": "Instance", "start_bit": 0, "length": 8},
+        {"name": "Group", "start_bit": 8, "length": 8},
+        {"name": "Duty Cycle", "start_bit": 16, "length": 8},
         {
           "name": "Command",
           "start_bit": 24,
@@ -48,26 +215,10 @@
             "255": "UNKNOWN"
           }
         },
-        {
-          "name": "Duration",
-          "start_bit": 32,
-          "length": 8
-        },
-        {
-          "name": "Interlock",
-          "start_bit": 40,
-          "length": 8
-        },
-        {
-          "name": "Ramp Time",
-          "start_bit": 48,
-          "length": 8
-        },
-        {
-          "name": "Reserved",
-          "start_bit": 56,
-          "length": 8
-        }
+        {"name": "Duration", "start_bit": 32, "length": 8},
+        {"name": "Interlock", "start_bit": 40, "length": 8},
+        {"name": "Ramp Time", "start_bit": 48, "length": 8},
+        {"name": "Reserved", "start_bit": 56, "length": 8}
       ]
     },
     {
@@ -77,98 +228,554 @@
       "dgn_mask": "1FFFF",
       "dgn_filter": "1FEDA",
       "parameters": [
+        {"name": "Instance", "start_bit": 0, "length": 8},
+        {"name": "Group", "start_bit": 8, "length": 8},
+        {"name": "Brightness", "start_bit": 16, "length": 8},
+        {"name": "Lock Status", "start_bit": 24, "length": 2},
+        {"name": "Overcurrent Status", "start_bit": 26, "length": 2},
+        {"name": "Override Status", "start_bit": 28, "length": 2},
+        {"name": "Enable Status", "start_bit": 30, "length": 2},
+        {"name": "Duration", "start_bit": 32, "length": 8},
         {
-          "name": "Instance",
-          "start_bit": 0,
-          "length": 8
-        },
-        {
-          "name": "Group",
-          "start_bit": 8,
-          "length": 8
-        },
-        {
-          "name": "Brightness",
-          "start_bit": 16,
-          "length": 8
-        },
-        {
-          "name": "Lock Status",
-          "start_bit": 24,
-          "length": 2
-        },
-        {
-          "name": "Overcurrent Status",
-          "start_bit": 26,
-          "length": 2
-        },
-        {
-          "name": "Override Status",
-          "start_bit": 28,
-          "length": 2
-        },
-        {
-          "name": "Enable Status",
-          "start_bit": 30,
-          "length": 2
-        },
-        {
-          "name": "Duration",
-          "start_bit": 32,
-          "length": 8
-        },
-        {
-          "name": "Last Command",
-          "start_bit": 40,
-          "length": 8,
+          "name": "Last Command", "start_bit": 40, "length": 8,
           "translations": {
-            "0": "SET_BRIGHTNESS",
-            "1": "ON",
-            "2": "ON_DELAY",
-            "3": "OFF",
-            "4": "STOP",
-            "5": "TOGGLE",
-            "6": "MEMORY_OFF",
-            "7": "SAVE_SCENE",
-            "11": "RAMP_BRIGHTNESS",
-            "12": "RAMP_TOGGLE",
-            "13": "RAMP_UP",
-            "14": "RAMP_DOWN",
-            "15": "RAMP_UP_DOWN",
-            "16": "RAMP_UP_DOWN_TOGGLE",
-            "21": "LOCK",
-            "22": "UNLOCK",
-            "31": "FLASH",
-            "32": "FLASH_MOMENTARY",
-            "255": "UNKNOWN"
+            "0": "SET_BRIGHTNESS", "1": "ON", "2": "ON_DELAY", "3": "OFF", "4": "STOP", "5": "TOGGLE",
+            "6": "MEMORY_OFF", "7": "SAVE_SCENE", "11": "RAMP_BRIGHTNESS", "12": "RAMP_TOGGLE",
+            "13": "RAMP_UP", "14": "RAMP_DOWN", "15": "RAMP_UP_DOWN", "16": "RAMP_UP_DOWN_TOGGLE",
+            "21": "LOCK", "22": "UNLOCK", "31": "FLASH", "32": "FLASH_MOMENTARY", "255": "UNKNOWN"
           }
         },
-        {
-          "name": "Interlock Status",
-          "start_bit": 48,
-          "length": 2
-        },
-        {
-          "name": "Load Status",
-          "start_bit": 50,
-          "length": 2
-        },
-        {
-          "name": "Reserved",
-          "start_bit": 52,
-          "length": 2
-        },
-        {
-          "name": "Undercurrent Status",
-          "start_bit": 54,
-          "length": 2
-        },
-        {
-          "name": "Master Memory Value",
-          "start_bit": 56,
-          "length": 8
-        }
+        {"name": "Interlock Status", "start_bit": 48, "length": 2},
+        {"name": "Load Status", "start_bit": 50, "length": 2},
+        {"name": "Reserved", "start_bit": 52, "length": 2},
+        {"name": "Undercurrent Status", "start_bit": 54, "length": 2},
+        {"name": "Master Memory Value", "start_bit": 56, "length": 8}
       ]
+    },
+    {
+      "name": "DIGITAL_INPUT_STATUS",
+      "dgn_filter": "0x1FFB8",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#E0E0E0",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "position", "start_bit": 8, "length": 8},
+        {"name": "momentary", "start_bit": 16, "length": 1},
+        {"name": "reservedBits1", "start_bit": 17, "length": 7},
+        {"name": "numPositions", "start_bit": 24, "length": 8},
+        {"name": "bankSelect", "start_bit": 32, "length": 4},
+        {"name": "reservedBits2", "start_bit": 36, "length": 4},
+        {"name": "reserved", "start_bit": 40, "length": 24}
+      ]
+    },
+    {
+      "name": "DC_MOTOR_CONTROL_STATUS",
+      "dgn_filter": "0x1FEE0",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#333333",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "group", "start_bit": 8, "length": 8},
+        {"name": "operatingStatus", "start_bit": 16, "length": 8},
+        {"name": "lockStatus", "start_bit": 24, "length": 2},
+        {"name": "motorStatus", "start_bit": 26, "length": 2},
+        {"name": "fwdStatus", "start_bit": 28, "length": 2},
+        {"name": "revStatus", "start_bit": 30, "length": 2},
+        {"name": "duration", "start_bit": 32, "length": 8},
+        {"name": "lastCmd", "start_bit": 40, "length": 8},
+        {"name": "overcurrent", "start_bit": 48, "length": 2},
+        {"name": "override", "start_bit": 50, "length": 2},
+        {"name": "disable1", "start_bit": 52, "length": 2},
+        {"name": "disable2", "start_bit": 54, "length": 2},
+        {"name": "reserved", "start_bit": 56, "length": 8}
+      ],
+      "translations": {
+        "lastCmd": {
+          "4": "MOTOR_CMD_STOP",
+          "81": "MOTOR_CMD_FWD",
+          "41": "MOTOR_CMD_REV",
+          "85": "MOTOR_CMD_TOGGLE_FWD",
+          "45": "MOTOR_CMD_TOGGLE_REV",
+          "10": "MOTOR_CMD_TILT_FWD",
+          "21": "MOTOR_CMD_LOCK",
+          "22": "MOTOR_CMD_UNLOCK"
+        }
+      }
+    },
+    {
+      "name": "DC_MOTOR_CONTROL_COMMAND",
+      "dgn_filter": "0x1FEE1",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#006400",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "group", "start_bit": 8, "length": 8},
+        {"name": "dutyCycle", "start_bit": 16, "length": 8},
+        {"name": "command", "start_bit": 24, "length": 8},
+        {"name": "duration", "start_bit": 32, "length": 8},
+        {"name": "interlock", "start_bit": 40, "length": 8},
+        {"name": "reserved", "start_bit": 48, "length": 16}
+      ],
+      "translations": {
+        "command": {
+          "4": "MOTOR_CMD_STOP",
+          "81": "MOTOR_CMD_FWD",
+          "41": "MOTOR_CMD_REV",
+          "85": "MOTOR_CMD_TOGGLE_FWD",
+          "45": "MOTOR_CMD_TOGGLE_REV",
+          "10": "MOTOR_CMD_TILT_FWD",
+          "21": "MOTOR_CMD_LOCK",
+          "22": "MOTOR_CMD_UNLOCK"
+        }
+      }
+    },
+    {
+      "name": "DC_COMP_DRV_STATUS_1",
+      "dgn_filter": "0x16F00",
+      "dgn_mask": "0x1FF00",
+      "text_color": "#000000",
+      "background_color": "#ADD8E6",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "driverIndex", "start_bit": 8, "length": 8},
+        {"name": "voltage", "start_bit": 16, "length": 16},
+        {"name": "current", "start_bit": 32, "length": 16},
+        {"name": "outputStatus", "start_bit": 48, "length": 2},
+        {"name": "desiredStatus", "start_bit": 50, "length": 2},
+        {"name": "shutdownStatus", "start_bit": 52, "length": 2},
+        {"name": "resetType", "start_bit": 54, "length": 2},
+        {"name": "reasonForShutdown", "start_bit": 56, "length": 8}
+      ]
+    },
+    {
+      "name": "WATER_PUMP_CMD",
+      "dgn_filter": "0x1FFB2",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#8B0000",
+      "parameters": [
+        {"name": "command", "start_bit": 0, "length": 8},
+        {"name": "pumpPressure_LSB", "start_bit": 8, "length": 8},
+        {"name": "pumpPressure_MSB", "start_bit": 16, "length": 8},
+        {"name": "regPressure_LSB", "start_bit": 24, "length": 8},
+        {"name": "regPressure_MSB", "start_bit": 32, "length": 8},
+        {"name": "reserved", "start_bit": 40, "length": 24}
+      ]
+    },
+    {
+      "name": "DC_DIMMER_STATUS_1",
+      "dgn_filter": "0x1FFBB",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#FFD700",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "masterBrightness", "start_bit": 8, "length": 8},
+        {"name": "redBrightness", "start_bit": 16, "length": 8},
+        {"name": "greenBrightness", "start_bit": 24, "length": 8},
+        {"name": "blueBrightness", "start_bit": 32, "length": 8},
+        {"name": "onDuration", "start_bit": 40, "length": 4},
+        {"name": "offDuration", "start_bit": 44, "length": 4},
+        {"name": "whiteBrightness", "start_bit": 48, "length": 8},
+        {"name": "reserved", "start_bit": 56, "length": 8}
+      ]
+    },
+    {
+      "name": "DC_DIMMER_STATUS_2",
+      "dgn_filter": "0x1FFBA",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#FFE700",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8}
+      ]
+    },
+    {
+      "name": "DC_LOAD_COMMAND",
+      "dgn_filter": "0x1FFBC",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#FF8C00",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "group", "start_bit": 8, "length": 8},
+        {"name": "level", "start_bit": 16, "length": 8},
+        {"name": "mode", "start_bit": 24, "length": 2},
+        {"name": "interlock", "start_bit": 26, "length": 2},
+        {"name": "direction", "start_bit": 28, "length": 4},
+        {"name": "command", "start_bit": 32, "length": 8},
+        {"name": "duration", "start_bit": 40, "length": 8},
+        {"name": "reserved", "start_bit": 48, "length": 24}
+      ],
+      "translations": {
+        "command": {
+          "0": "DC_LOAD_SET_LEVEL",
+          "1": "DC_LOAD_ON",
+          "2": "DC_LOAD_ON_DELAY",
+          "3": "DC_LOAD_OFF_DELAY",
+          "4": "DC_LOAD_STOP",
+          "5": "DC_LOAD_TOGGLE",
+          "6": "DC_LOAD_MEMORY_OFF",
+          "21": "DC_LOAD_LOCK",
+          "22": "DC_LOAD_UNLOCK",
+          "31": "DC_LOAD_FLASH",
+          "32": "DC_LOAD_FLASH_MOMENTARY",
+          "255": "DC_LOAD_CMD_UNKNOWN"
+        }
+      }
+    },
+    {
+      "name": "DC_LOAD_STATUS",
+      "dgn_filter": "0x1FFBD",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#98FB98",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "group", "start_bit": 8, "length": 8},
+        {"name": "level", "start_bit": 16, "length": 8},
+        {"name": "operatingMode", "start_bit": 24, "length": 2},
+        {"name": "varLevelCapacity", "start_bit": 26, "length": 2},
+        {"name": "priority", "start_bit": 28, "length": 4},
+        {"name": "delay", "start_bit": 32, "length": 8},
+        {"name": "demandedCurrent", "start_bit": 40, "length": 8},
+        {"name": "presentCurrent", "start_bit": 48, "length": 16}
+      ]
+    },
+    {
+      "name": "DC_LOAD_STATUS_2",
+      "dgn_filter": "0x1FEDC",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#A8FBA8",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8}
+      ]
+    },
+    {
+      "name": "WATER_PUMP_STATUS",
+      "dgn_filter": "0x1FFB3",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#4682B4",
+      "parameters": [
+        {"name": "operatingStatus", "start_bit": 0, "length": 2},
+        {"name": "pumpStatus", "start_bit": 2, "length": 2},
+        {"name": "waterHookup", "start_bit": 4, "length": 2},
+        {"name": "systemPressure_LSB", "start_bit": 8, "length": 8},
+        {"name": "systemPressure_MSB", "start_bit": 16, "length": 8},
+        {"name": "pumpPressure_LSB", "start_bit": 24, "length": 8},
+        {"name": "pumpPressure_MSB", "start_bit": 32, "length": 8},
+        {"name": "regPressure_LSB", "start_bit": 40, "length": 8},
+        {"name": "regPressure_MSB", "start_bit": 48, "length": 8},
+        {"name": "current", "start_bit": 56, "length": 8}
+      ]
+    },
+    {
+      "name": "GENERIC_INDICATOR_COMMAND",
+      "dgn_filter": "0x1FED9",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#708090",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "group", "start_bit": 8, "length": 8},
+        {"name": "brightness", "start_bit": 16, "length": 8},
+        {"name": "bankSelect", "start_bit": 24, "length": 4},
+        {"name": "reserved1", "start_bit": 28, "length": 4},
+        {"name": "duration", "start_bit": 32, "length": 8},
+        {"name": "reserved2", "start_bit": 40, "length": 8},
+        {"name": "function", "start_bit": 48, "length": 8},
+        {"name": "reserved3", "start_bit": 56, "length": 8}
+      ],
+      "translations": {
+        "function": {
+          "0": "GENERIC_INDICATOR_SET_BRIGHTNESS_1_2",
+          "1": "GENERIC_INDICATOR_OFF_1_2",
+          "2": "GENERIC_INDICATOR_ON_1_OFF_2",
+          "3": "GENERIC_INDICATOR_OFF_1_ON_2",
+          "4": "GENERIC_INDICATOR_ON_1_2",
+          "17": "GENERIC_INDICATOR_RAMP_1_2",
+          "51": "GENERIC_INDICATOR_FLASH_ALTERNATE_1_2"
+        }
+      }
+    },
+    {
+      "name": "GENERIC_INDICATOR_STATUS",
+      "dgn_filter": "0x1FED7",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#2F4F4F",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "group", "start_bit": 8, "length": 8},
+        {"name": "brightness", "start_bit": 16, "length": 8},
+        {"name": "bankSelect", "start_bit": 24, "length": 4},
+        {"name": "reserved1", "start_bit": 28, "length": 4},
+        {"name": "duration", "start_bit": 32, "length": 8},
+        {"name": "LED1status", "start_bit": 40, "length": 2},
+        {"name": "LED2status", "start_bit": 42, "length": 2},
+        {"name": "reserved2", "start_bit": 44, "length": 4},
+        {"name": "lastCommand", "start_bit": 48, "length": 8},
+        {"name": "reserved3", "start_bit": 56, "length": 8}
+      ],
+      "translations": {
+        "lastCommand": {
+          "0": "GENERIC_INDICATOR_SET_BRIGHTNESS_1_2",
+          "1": "GENERIC_INDICATOR_OFF_1_2",
+          "2": "GENERIC_INDICATOR_ON_1_OFF_2",
+          "3": "GENERIC_INDICATOR_OFF_1_ON_2",
+          "4": "GENERIC_INDICATOR_ON_1_2",
+          "17": "GENERIC_INDICATOR_RAMP_1_2",
+          "51": "GENERIC_INDICATOR_FLASH_ALTERNATE_1_2"
+        }
+      }
+    },
+    {
+      "name": "AWNING_COMMAND",
+      "dgn_filter": "0x1FEF2",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#FFFFE0",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "userLock", "start_bit": 8, "length": 2},
+        {"name": "mechanicalLock", "start_bit": 10, "length": 2},
+        {"name": "awningLight", "start_bit": 12, "length": 2},
+        {"name": "secondaryLight", "start_bit": 14, "length": 2},
+        {"name": "direction", "start_bit": 16, "length": 8},
+        {"name": "moveToPosition", "start_bit": 24, "length": 8},
+        {"name": "motionSensitivity", "start_bit": 32, "length": 8},
+        {"name": "reserved1", "start_bit": 40, "length": 2},
+        {"name": "reserved2", "start_bit": 42, "length": 2},
+        {"name": "autoRetractOnBrakeRelease", "start_bit": 44, "length": 2},
+        {"name": "autoRetractOnIgnition", "start_bit": 46, "length": 2},
+        {"name": "awningLightBrightness", "start_bit": 48, "length": 8},
+        {"name": "secondaryLightBrightness", "start_bit": 56, "length": 8}
+      ],
+      "translations": {
+        "userLock": {
+          "0": "AWNING_CMD_USER_LOCK_RELEASE",
+          "1": "AWNING_CMD_USER_LOCK_SET"
+        },
+        "mechanicalLock": {
+          "0": "AWNING_CMD_MECHANICAL_LOCK_DISENGAGE",
+          "1": "AWNING_CMD_MECHANICAL_LOCK_ENGAGE"
+        },
+        "awningLight": {
+          "0": "AWNING_CMD_AWNING_LIGHT_OFF",
+          "1": "AWNING_CMD_AWNING_LIGHT_ON"
+        },
+        "secondaryLight": {
+          "0": "AWNING_CMD_SECONDARY_LIGHT_OFF",
+          "1": "AWNING_CMD_SECONDARY_LIGHT_ON"
+        },
+        "direction": {
+          "0": "AWNING_CMD_DIRECTION_STOP",
+          "1": "AWNING_CMD_DIRECTION_EXTEND",
+          "2": "AWNING_CMD_DIRECTION_RETRACT"
+        },
+        "moveToPosition": {
+          "0": "AWNING_CMD_POS_FULL_RETRACTION",
+          "200": "AWNING_CMD_POS_FULL_EXTENSION"
+        },
+        "autoRetractOnBrakeRelease": {
+          "0": "AWNING_CMD_AUTO_RETRACT_PARK_BRAKE_OFF",
+          "1": "AWNING_CMD_AUTO_RETRACT_PARK_BRAKE_ON"
+        },
+        "autoRetractOnIgnition": {
+          "0": "AWNING_CMD_AUTO_RETRACT_IGNITION_OFF",
+          "1": "AWNING_CMD_AUTO_RETRACT_IGNITION_ON"
+        }
+      }
+    },
+    {
+      "name": "AWNING_STATUS",
+      "dgn_filter": "0x1FEF3",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#FFE4B5",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "motion", "start_bit": 8, "length": 8},
+        {"name": "position", "start_bit": 16, "length": 8},
+        {"name": "travelLock", "start_bit": 24, "length": 2},
+        {"name": "unlockStatus", "start_bit": 26, "length": 2},
+        {"name": "userLockStatus", "start_bit": 28, "length": 2},
+        {"name": "brakeStatus", "start_bit": 30, "length": 2},
+        {"name": "parkedStatus", "start_bit": 32, "length": 2},
+        {"name": "ignitionKey", "start_bit": 34, "length": 2},
+        {"name": "lowVoltage", "start_bit": 36, "length": 2},
+        {"name": "genericLock", "start_bit": 38, "length": 2},
+        {"name": "awningLight", "start_bit": 40, "length": 2},
+        {"name": "secondaryLight", "start_bit": 42, "length": 2},
+        {"name": "autoRetractionOnParkBrakeRelease", "start_bit": 44, "length": 2},
+        {"name": "autoRetractionOnIgnition", "start_bit": 46, "length": 2},
+        {"name": "awningLightBrightness", "start_bit": 48, "length": 8},
+        {"name": "secondaryLightBrightness", "start_bit": 56, "length": 8}
+      ],
+      "translations": {
+        "motion": {
+          "0": "AWNING_STATUS_MOTION_STOPPED",
+          "1": "AWNING_STATUS_MOTION_EXTENDING",
+          "2": "AWNING_STATUS_MOTION_RETRACTING",
+          "3": "AWNING_STATUS_MOTION_TILTING_FRONT",
+          "4": "AWNING_STATUS_MOTION_TILTING_REAR"
+        }
+      }
+    },
+    {
+      "name": "ROOF_FAN_COMMAND_1",
+      "dgn_filter": "0x1FEA6",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#800080",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "systemStatus", "start_bit": 8, "length": 2},
+        {"name": "fanMode", "start_bit": 10, "length": 2},
+        {"name": "speedMode", "start_bit": 12, "length": 2},
+        {"name": "light", "start_bit": 14, "length": 2},
+        {"name": "fanSpeedSetting", "start_bit": 16, "length": 8},
+        {"name": "flowDirection", "start_bit": 24, "length": 2},
+        {"name": "deprecated1", "start_bit": 26, "length": 4},
+        {"name": "deprecated2", "start_bit": 30, "length": 2},
+        {"name": "ambientTemperature", "start_bit": 32, "length": 16},
+        {"name": "tempSetPoint", "start_bit": 48, "length": 16}
+      ],
+      "translations": {
+        "systemStatus": {
+          "0": "ROOF_FAN_SYSTEM_OFF",
+          "1": "ROOF_FAN_SYSTEM_ON"
+        },
+        "fanMode": {
+          "0": "ROOF_FAN_FAN_MODE_AUTO",
+          "1": "ROOF_FAN_FAN_MODE_FORCE_ON"
+        },
+        "speedMode": {
+          "0": "ROOF_FAN_SPEED_MODE_AUTO",
+          "1": "ROOF_FAN_SPEED_MODE_MANUAL"
+        },
+        "light": {
+          "0": "ROOF_FAN_LIGHT_OFF",
+          "1": "ROOF_FAN_LIGHT_ON"
+        },
+        "flowDirection": {
+          "0": "ROOF_FAN_FLOW_DIRECTION_AIR_OUT",
+          "1": "ROOF_FAN_FLOW_DIRECTION_AIR_IN"
+        }
+      }
+    },
+    {
+      "name": "ROOF_FAN_COMMAND_2",
+      "dgn_filter": "0x1FDE2",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#FFFFFF",
+      "background_color": "#FF69B4",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "domeCommand", "start_bit": 8, "length": 8},
+        {"name": "desiredDomePosition", "start_bit": 16, "length": 8},
+        {"name": "rainSensorOverride", "start_bit": 24, "length": 2},
+        {"name": "desiredSetpointControlledDome", "start_bit": 26, "length": 2},
+        {"name": "autoCloseDomeOnFanOff", "start_bit": 28, "length": 2},
+        {"name": "autoFanOffOnDomeClose", "start_bit": 30, "length": 2},
+        {"name": "fanSpeedIncrementDecrement", "start_bit": 32, "length": 2},
+        {"name": "fanSpeedIncrementDecrementStep", "start_bit": 34, "length": 6},
+        {"name": "reserved", "start_bit": 40, "length": 24}
+      ],
+      "translations": {
+        "domeCommand": {
+          "0": "ROOF_FAN_DOME_STOP",
+          "1": "ROOF_FAN_DOME_OPEN",
+          "2": "ROOF_FAN_DOME_CLOSE"
+        },
+        "rainSensorOverride": {
+          "0": "ROOF_FAN_RAIN_SENSOR_USE",
+          "1": "ROOF_FAN_RAIN_SENSOR_OVERRIDE"
+        },
+        "desiredSetpointControlledDome": {
+          "0": "ROOF_FAN_DOME_SETPOINT_CONTROL_DISABLE",
+          "1": "ROOF_FAN_DOME_SETPOINT_CONTROL_ENABLE"
+        },
+        "autoCloseDomeOnFanOff": {
+          "0": "ROOF_FAN_AUTO_CLOSE_DOME_OFF",
+          "1": "ROOF_FAN_AUTO_CLOSE_DOME_ON"
+        },
+        "autoFanOffOnDomeClose": {
+          "0": "ROOF_FAN_AUTO_FAN_OFF_DISABLE",
+          "1": "ROOF_FAN_AUTO_FAN_OFF_ENABLE"
+        }
+      }
+    },
+    {
+      "name": "ROOF_FAN_STATUS_1",
+      "dgn_filter": "0x1FEA7",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#FFA07A",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "systemStatus", "start_bit": 8, "length": 2},
+        {"name": "fanMode", "start_bit": 10, "length": 2},
+        {"name": "speedMode", "start_bit": 12, "length": 2},
+        {"name": "light", "start_bit": 14, "length": 2},
+        {"name": "fanSpeedSetting", "start_bit": 16, "length": 8},
+        {"name": "flowDirection", "start_bit": 24, "length": 2},
+        {"name": "domePosition", "start_bit": 26, "length": 4},
+        {"name": "deprecated", "start_bit": 30, "length": 2},
+        {"name": "ambientTemperature", "start_bit": 32, "length": 16},
+        {"name": "tempSetPoint", "start_bit": 48, "length": 16}
+      ]
+    },
+    {
+      "name": "ROOF_FAN_STATUS_2",
+      "dgn_filter": "0x1FDE3",
+      "dgn_mask": "0x1FFFF",
+      "text_color": "#000000",
+      "background_color": "#FFD700",
+      "parameters": [
+        {"name": "instance", "start_bit": 0, "length": 8},
+        {"name": "domeMode", "start_bit": 8, "length": 8},
+        {"name": "domePosition", "start_bit": 16, "length": 8},
+        {"name": "rainSensor", "start_bit": 24, "length": 2},
+        {"name": "rainSensorOverride", "start_bit": 26, "length": 2},
+        {"name": "setpointControlledDome", "start_bit": 28, "length": 2},
+        {"name": "autoCloseDomeOnFanOff", "start_bit": 30, "length": 2},
+        {"name": "autoFanOffOnDomeClose", "start_bit": 32, "length": 2},
+        {"name": "fanSpeedIncDecStep", "start_bit": 34, "length": 6},
+        {"name": "reserved", "start_bit": 40, "length": 24}
+      ],
+      "translations": {
+        "domeMode": {
+          "0": "ROOF_FAN_DOME_STOP",
+          "1": "ROOF_FAN_DOME_OPEN",
+          "2": "ROOF_FAN_DOME_CLOSE"
+        },
+        "rainSensor": {
+          "0": "ROOF_FAN_RAIN_SENSOR_USE",
+          "1": "ROOF_FAN_RAIN_SENSOR_OVERRIDE"
+        },
+        "rainSensorOverride": {
+          "0": "ROOF_FAN_RAIN_SENSOR_USE",
+          "1": "ROOF_FAN_RAIN_SENSOR_OVERRIDE"
+        },
+        "setpointControlledDome": {
+          "0": "ROOF_FAN_DOME_SETPOINT_CONTROL_DISABLE",
+          "1": "ROOF_FAN_DOME_SETPOINT_CONTROL_ENABLE"
+        },
+        "autoCloseDomeOnFanOff": {
+          "0": "ROOF_FAN_AUTO_CLOSE_DOME_OFF",
+          "1": "ROOF_FAN_AUTO_CLOSE_DOME_ON"
+        },
+        "autoFanOffOnDomeClose": {
+          "0": "ROOF_FAN_AUTO_FAN_OFF_DISABLE",
+          "1": "ROOF_FAN_AUTO_FAN_OFF_ENABLE"
+        }
+      }
     }
   ]
 }
