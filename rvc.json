@@ -1,0 +1,174 @@
+{
+  "packets": [
+    {
+      "name": "DC Dimmer Command 2",
+      "text_color": "#000000",
+      "background_color": "#42f595",
+      "dgn_mask": "1FFFF",
+      "dgn_filter": "1FEDB",
+      "parameters": [
+        {
+          "name": "Instance",
+          "start_bit": 0,
+          "length": 8
+        },
+        {
+          "name": "Group",
+          "start_bit": 8,
+          "length": 8
+        },
+        {
+          "name": "Duty Cycle",
+          "start_bit": 16,
+          "length": 8
+        },
+        {
+          "name": "Command",
+          "start_bit": 24,
+          "length": 8,
+          "translations": {
+            "0": "PWM",
+            "1": "ON",
+            "2": "ON_DELAY",
+            "3": "OFF",
+            "4": "STOP",
+            "5": "TOGGLE",
+            "6": "MEMORY_OFF",
+            "7": "SAVE_SCENE",
+            "11": "RAMP_BRIGHTNESS",
+            "12": "RAMP_TOGGLE",
+            "13": "RAMP_UP",
+            "14": "RAMP_DOWN",
+            "15": "RAMP_UP_DOWN",
+            "16": "RAMP_UP_DOWN_TOGGLE",
+            "21": "LOCK",
+            "22": "UNLOCK",
+            "31": "FLASH",
+            "32": "FLASH_MOMENTARY",
+            "255": "UNKNOWN"
+          }
+        },
+        {
+          "name": "Duration",
+          "start_bit": 32,
+          "length": 8
+        },
+        {
+          "name": "Interlock",
+          "start_bit": 40,
+          "length": 8
+        },
+        {
+          "name": "Ramp Time",
+          "start_bit": 48,
+          "length": 8
+        },
+        {
+          "name": "Reserved",
+          "start_bit": 56,
+          "length": 8
+        }
+      ]
+    },
+    {
+      "name": "DC Dimmer Status 3",
+      "text_color": "#ffffff",
+      "background_color": "#4287f5",
+      "dgn_mask": "1FFFF",
+      "dgn_filter": "1FEDA",
+      "parameters": [
+        {
+          "name": "Instance",
+          "start_bit": 0,
+          "length": 8
+        },
+        {
+          "name": "Group",
+          "start_bit": 8,
+          "length": 8
+        },
+        {
+          "name": "Brightness",
+          "start_bit": 16,
+          "length": 8
+        },
+        {
+          "name": "Lock Status",
+          "start_bit": 24,
+          "length": 2
+        },
+        {
+          "name": "Overcurrent Status",
+          "start_bit": 26,
+          "length": 2
+        },
+        {
+          "name": "Override Status",
+          "start_bit": 28,
+          "length": 2
+        },
+        {
+          "name": "Enable Status",
+          "start_bit": 30,
+          "length": 2
+        },
+        {
+          "name": "Duration",
+          "start_bit": 32,
+          "length": 8
+        },
+        {
+          "name": "Last Command",
+          "start_bit": 40,
+          "length": 8,
+          "translations": {
+            "0": "SET_BRIGHTNESS",
+            "1": "ON",
+            "2": "ON_DELAY",
+            "3": "OFF",
+            "4": "STOP",
+            "5": "TOGGLE",
+            "6": "MEMORY_OFF",
+            "7": "SAVE_SCENE",
+            "11": "RAMP_BRIGHTNESS",
+            "12": "RAMP_TOGGLE",
+            "13": "RAMP_UP",
+            "14": "RAMP_DOWN",
+            "15": "RAMP_UP_DOWN",
+            "16": "RAMP_UP_DOWN_TOGGLE",
+            "21": "LOCK",
+            "22": "UNLOCK",
+            "31": "FLASH",
+            "32": "FLASH_MOMENTARY",
+            "255": "UNKNOWN"
+          }
+        },
+        {
+          "name": "Interlock Status",
+          "start_bit": 48,
+          "length": 2
+        },
+        {
+          "name": "Load Status",
+          "start_bit": 50,
+          "length": 2
+        },
+        {
+          "name": "Reserved",
+          "start_bit": 52,
+          "length": 2
+        },
+        {
+          "name": "Undercurrent Status",
+          "start_bit": 54,
+          "length": 2
+        },
+        {
+          "name": "Master Memory Value",
+          "start_bit": 56,
+          "length": 8
+        }
+      ]
+    }
+  ]
+}
