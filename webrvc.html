@@ -78,7 +78,7 @@
   
   <label><input type="checkbox" id="autoScroll" checked> Auto-Scroll</label>
   <label><input type="checkbox" id="showUnparsed" checked> Show Unparsed Packets</label>
-  <label><input type="checkbox" id="includeDate" checked> Include Date in Timestamp</label>
+  <label><input type="checkbox" id="includeDate" unchecked> Include Date in Timestamp</label>
   
   <br><br>
 
@@ -158,7 +158,6 @@
     const sourceTable = document.getElementById('sourceTable').querySelector('tbody');
     const fileInput = document.getElementById('fileInput');
     const uploadStatus = document.getElementById('uploadStatus');
-    const includeDate = document.getElementById('includeDate').checked;
 
     let port;
     let reader;
@@ -316,6 +315,7 @@
     }
 
     function processCanData(data) {
+      const includeDate = document.getElementById('includeDate').checked;
       const lines = data.trim().split('\r');
       for (const line of lines) {
         if (line.startsWith('T') && line.length >= 11) {
@@ -330,10 +330,17 @@
           sourceAddresses[sourceAddress].count++;
           updateSourceTable();
 
-          let timestamp = new Date().toISOString().replace('T', ' ').replace('Z', '');
-          if (!includeDate) {
-            timestamp = timestamp.split(' ')[1];
-          }
+          let now = new Date();
+          let yyyy = now.getFullYear();
+          let mm = String(now.getMonth() + 1).padStart(2, '0'); // Months start at 0!
+          let dd = String(now.getDate()).padStart(2, '0');
+          let hh = String(now.getHours()).padStart(2, '0');
+          let min = String(now.getMinutes()).padStart(2, '0');
+          let ss = String(now.getSeconds()).padStart(2, '0');
+          let ms = String(now.getMilliseconds()).padStart(3, '0');
+          let datePart = includeDate ? `${yyyy}-${mm}-${dd} ` : '';
+          let timePart = `${hh}:${min}:${ss}.${ms}`;
+          let timestamp = datePart + timePart;
           let logEntry = [timestamp, id, dgn, sourceAddress, payload];
 
           const packet = packetsOfInterest.find(p => (parseInt(dgn, 16) & parseInt(p.dgn_mask, 16)) === parseInt(p.dgn_filter, 16));
