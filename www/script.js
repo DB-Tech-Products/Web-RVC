@@ -22,6 +22,19 @@ let paused = false;
 let sourceAddresses = {};
 let packetsOfInterest = [];
 
+// Load the default JSON file
+fetch('rvc.json')
+  .then(response => response.json())
+  .then(data => {
+    packetsOfInterest = data.packets;
+    uploadStatus.textContent = `${packetsOfInterest.length} packet types defined from default rvc.json:`;
+    generatePacketDefinitionsTable(packetsOfInterest);
+  })
+  .catch(error => {
+    uploadStatus.textContent = 'Error loading default JSON';
+    console.error('Error loading default JSON:', error);
+  });
+
 fileInput.addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -30,7 +43,7 @@ fileInput.addEventListener('change', (event) => {
       try {
         const data = JSON.parse(e.target.result);
         packetsOfInterest = data.packets;
-        uploadStatus.textContent = `${packetsOfInterest.length} packet types defined:`;
+        uploadStatus.textContent = `${packetsOfInterest.length} packet types defined from uploaded JSON:`;
         generatePacketDefinitionsTable(packetsOfInterest);
       } catch (error) {
         uploadStatus.textContent = 'Error parsing JSON';
