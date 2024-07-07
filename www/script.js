@@ -21,6 +21,7 @@ let outputStream;
 let paused = false;
 let sourceAddresses = {};
 let packetsOfInterest = [];
+let multiPacketBuffer = {};
 
 // Load the default JSON file
 fetch('rvc.json')
@@ -138,14 +139,12 @@ sendButton.addEventListener('click', async () => {
   const command = `T${id}${len}${payload}\r`;
 
   await outputStream.write(new TextEncoder().encode(command));
-  dgnInput.value = '';
-  sourceAddrInput.value = '';
-  payloadInput.value = '';
 });
 
 clearButton.addEventListener('click', () => {
   logTable.innerHTML = '';
   sourceAddresses = {};
+  multiPacketBuffer = {}; // Clear multi-packet buffer
   updateSourceTable();
 });
 
@@ -211,12 +210,13 @@ function processCanData(data) {
       let timePart = `${hh}:${min}:${ss}.${ms}`;
       let timestamp = datePart + timePart;
       let logEntry = [timestamp, id, dgn, sourceAddress, payload];
+      let logEntryMulti = [timestamp, id, dgn, sourceAddress, payload];
 
       const packet = packetsOfInterest.find(p => (parseInt(dgn, 16) & parseInt(p.dgn_mask, 16)) === parseInt(p.dgn_filter, 16));
       if (packet && sourceAddresses[sourceAddress].show) {
         logEntry.push(packet.name);
         const params = packet.parameters.map(param => {
-          const value = extractParameter(payload, param.start_bit, param.length);
+          const value = extractParameter(logEntry[4], param.start_bit, param.length);
           const translatedValue = param.translations ? param.translations[value] : value;
           return `${param.name}: ${translatedValue}`;
         }).join(', ');
@@ -229,8 +229,66 @@ function processCanData(data) {
       } else {
         continue; // Skip logging this entry if showUnparsed is not checked
       }
+
+      //processLogEntry(logEntry, dgn, sourceAddress);
+
+      // Handle multi-packet data
+      if (dgn === '0ECFF') {  // Initial packet
+        handleInitialPacket(id, payload);
+      } else if (dgn === '0EBFF') {  // Subsequent packets
+        const completePayload = processMultiPacketData(id, payload);
+        if (completePayload) {
+          let logEntryMulti = [timestamp, id, '0FEEB', sourceAddress, completePayload, 'PRODUCT_ID'];
+          const params = packet.parameters.map(param => {
+            const value = extractParameter(logEntryMulti[4], param.start_bit, param.length);
+            const translatedValue = param.translations ? param.translations[value] : value;
+            return `${param.name}: ${translatedValue}`;
+          }).join(', ');
+          logEntryMulti.push(params);
+          addLogEntryToTable(logEntryMulti, "#666666", "#333333");
+        }
+      }
     }
   }
+}
+
+function handleInitialPacket(id, payload) {
+  const length = parseInt(payload.substring(2, 6), 16);
+  const packetCount = parseInt(payload.substring(6, 8), 16);
+  const dgn = payload.substring(10, 15);
+
+  if ('0FEEB' !== dgn) return; // Only handle product ID multi-packets
+
+  multiPacketBuffer[id] = {
+    packets: Array(packetCount).fill(null),
+    received: 1,
+    total: packetCount,
+    length,
+    data
+  };
+
+  multiPacketBuffer[id].packets[0] = data;
+}
+
+function processMultiPacketData(id, payload) {
+  const packetNum = parseInt(payload.substring(0, 2), 16);
+  const data = payload.substring(2);
+
+  if (!multiPacketBuffer[id]) {
+    multiPacketBuffer[id] = { packets: [], received: 0, total: null };
+  }
+
+  const buffer = multiPacketBuffer[id];
+  buffer.packets[packetNum - 1] = data;
+  buffer.received++;
+
+  if (buffer.received === buffer.total) {
+    const completePayload = buffer.packets.join('');
+    delete multiPacketBuffer[id];
+    return completePayload;
+  }
+
+  return null;
 }
 
 function addLogEntryToTable(logEntry, textColor = '', backgroundColor = '') {
@@ -287,7 +345,7 @@ function updateSourceTable() {
 function getCsvContent() {
   const rows = Array.from(logTable.querySelectorAll('tr'));
   const csvContent = rows.map(row => {
-    const cols = Array.from(row.querySelectorAll('td')). map(td => td.textContent);
+    const cols = Array.from(row.querySelectorAll('td')).map(td => td.textContent);
     return cols.join(',');
   }).join('\n');
   return csvContent;
