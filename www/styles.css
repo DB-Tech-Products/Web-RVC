@@ -1,6 +1,6 @@
 body { font-family: monospace; }
 #logContainer {
-  height: 90vh;
+  height: 80vh;
   overflow-y: auto;
   border: 1px solid #ccc;
 }
