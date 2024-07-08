@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RV-C Tool: Disconnected</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <button id="connectButton">Connect</button>
+  <button id="disconnectButton" disabled>Disconnect</button>
+  <button id="clearButton">Clear</button>
+  <button id="exportCsvButton">Export to CSV</button>
+  <button id="pauseButton" disabled>Pause</button>
+  
+  <label><input type="checkbox" id="autoScroll" checked> Auto-Scroll</label>
+  <label><input type="checkbox" id="showUnparsed" checked> Show Unparsed Packets</label>
+  <label><input type="checkbox" id="includeDate"> Include Date in Timestamp</label>
+  
+  <br><br>
+
+  <div id="logSection">
+    <div id="logContainer">
+      <table id="logTable">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>ID</th>
+            <th>DGN</th>
+            <th>Src</th>
+            <th>Payload</th>
+            <th>Packet Name</th>
+            <th>Parameters</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="sourceSection">
+    <table id="sourceTable">
+      <thead>
+        <tr>
+          <th>Source Address</th>
+          <th>Packet Count</th>
+          <th>Show in Logs</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="clear"></div>
+
+  <div>
+    <h2>Send Command</h2>
+    Priority:
+    <select id="priority">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+    </select>
+    DGN: <input type="text" id="dgn" maxlength="5" placeholder="DGN (5 hex digits)">
+    Source Address: <input type="text" id="sourceAddr" maxlength="2" placeholder="Src (2 hex digits)">
+    Payload: <input type="text" id="payload" placeholder="Payload (hex)">
+    <button id="sendButton" disabled>Send</button>
+  </div>
+
+  <h2>Upload Packet Definitions</h2>
+  <input type="file" id="fileInput">
+  <div id="uploadStatus">No packet definitions loaded</div>
+  <div id="packetDefinitionsTable"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
