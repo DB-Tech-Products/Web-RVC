@@ -89,4 +89,4 @@ To contribute to this project, please fork the repository and create a pull requ
 
 ## License
 
-This project is licensed under the [TBD] License. See the LICENSE file for details.
+This project uses a custom license. See the LICENSE file for details.

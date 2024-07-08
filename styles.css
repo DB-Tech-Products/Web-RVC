@@ -48,6 +48,21 @@ button:disabled {
 #logSection {
   margin-bottom: 20px;
 }
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f0f0f0;
+  color: #000;
+  text-align: center;
+  padding: 0px;
+  border-top: 1px solid #ccc;
+}
+
+footer a {
+  color: inherit;
+}
+
 @media (prefers-color-scheme: dark) {
   body { background-color: #121212; color: #e0e0e0; }
   #logContainer, #sourceTable { border-color: #444; }
@@ -59,5 +74,10 @@ button:disabled {
     background-color: #333; 
     color: #e0e0e0; 
     border-color: #444; 
+  }
+  footer {
+    background-color: #333;
+    color: #e0e0e0;
+    border-top: 1px solid #444;
   }
 }
