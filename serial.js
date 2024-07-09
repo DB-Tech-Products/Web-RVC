@@ -17,9 +17,16 @@ export async function connect() {
 }
 
 export async function disconnect() {
-  await outputStream.write(new TextEncoder().encode('C\r')); // Close CAN channel
-  await reader.cancel();
-  await port.close();
+  try {
+    await outputStream.write(new TextEncoder().encode('C\r')); // Close CAN channel
+    await reader.cancel(); // Cancel the reader to release it
+    await reader.releaseLock(); // Release the reader lock
+    await outputStream.close(); // Close the writer stream
+    await port.close(); // Close the port
+    console.log("Disconnected from serial port");
+  } catch (error) {
+    console.error("Error during disconnect:", error);
+  }
 }
 
 export async function send(data) {
