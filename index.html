@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>RV-C Tool: Disconnected</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- <script src="https://unpkg.com/web-serial-polyfill"></script> -->
   <script>
     function isMobile() {
       return /Mobi|Android/i.test(navigator.userAgent);
@@ -12,10 +11,6 @@
 
     if (isMobile()) {
       document.documentElement.classList.add('mobile');
-      /*const script = document.createElement('script');
-      script.type = 'module';
-      script.src = 'polyfill.js';  // Path to your polyfill script
-      document.head.appendChild(script);*/
     }
   </script>
 </head>
@@ -55,9 +50,10 @@
     <table id="sourceTable">
       <thead>
         <tr>
-          <th>Source Address</th>
-          <th>Packet Count</th>
-          <th>Show in Logs</th>
+          <th>Src</th>
+          <th>Log?</th>
+          <th>Packets</th>
+          <th>DGN Counts</th>
         </tr>
       </thead>
       <tbody>

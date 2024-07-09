@@ -1,4 +1,3 @@
-// script.js
 const connectButton = document.getElementById('connectButton');
 const disconnectButton = document.getElementById('disconnectButton');
 const clearButton = document.getElementById('clearButton');
@@ -100,17 +99,6 @@ function initializeApp() {
       await serial.connect();
       console.log("Connected to serial port");
 
-      // Perform health check
-      /*const isHealthy = await serial.healthCheck();
-      if (!isHealthy) {
-        console.error("Health check failed");
-        alert("Failed to communicate with the CAN adapter. Please check the connection.");
-        await serial.disconnect();
-        return;
-      }
-      
-      console.log("Health check passed");*/
-
       document.title = 'RV-C Tool: Connected';
       serial.readData(processCanData);
 
@@ -166,7 +154,10 @@ function initializeApp() {
 
   clearButton.addEventListener('click', () => {
     logTable.innerHTML = '';
-    sourceAddresses = {};
+    for (const address in sourceAddresses) {
+      sourceAddresses[address].count = 0;
+      sourceAddresses[address].dgns = {};
+    }
     updateSourceTable();
   });
 
@@ -201,10 +192,16 @@ function processCanData(data) {
       const payload = line.substring(10);
 
       if (!sourceAddresses[sourceAddress]) {
-        sourceAddresses[sourceAddress] = { count: 0, show: true };
+        sourceAddresses[sourceAddress] = { count: 0, show: true, dgns: {} };
       }
       sourceAddresses[sourceAddress].count++;
+      if (!sourceAddresses[sourceAddress].dgns[dgn]) {
+        sourceAddresses[sourceAddress].dgns[dgn] = 0;
+      }
+      sourceAddresses[sourceAddress].dgns[dgn]++;
       updateSourceTable();
+
+      if (paused) continue; // Check if paused
 
       let now = new Date();
       let yyyy = now.getFullYear();
@@ -276,6 +273,7 @@ function updateSourceTable() {
     const row = document.createElement('tr');
     const addressCell = document.createElement('td');
     const countCell = document.createElement('td');
+    const dgnsCell = document.createElement('td');
     const showCell = document.createElement('td');
     const showCheckbox = document.createElement('input');
     showCheckbox.type = 'checkbox';
@@ -284,13 +282,17 @@ function updateSourceTable() {
       sourceAddresses[address].show = showCheckbox.checked;
     });
 
+    const dgns = Object.entries(info.dgns).map(([dgn, count]) => `${dgn} (${count})`).join(', ');
+
     addressCell.textContent = address;
     countCell.textContent = info.count;
+    dgnsCell.textContent = dgns;
     showCell.appendChild(showCheckbox);
 
     row.appendChild(addressCell);
-    row.appendChild(countCell);
     row.appendChild(showCell);
+    row.appendChild(countCell);
+    row.appendChild(dgnsCell);
     sourceTable.appendChild(row);
   }
 }
