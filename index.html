@@ -5,6 +5,15 @@
   <title>RV-C Tool: Disconnected</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://unpkg.com/web-serial-polyfill"></script>
+  <script>
+    function isMobile() {
+      return /Mobi|Android/i.test(navigator.userAgent);
+    }
+
+    if (isMobile()) {
+      document.documentElement.classList.add('mobile');
+    }
+  </script>
 </head>
 <body>
   <button id="connectButton">Connect</button>
