@@ -93,3 +93,7 @@ html.mobile label {
 html.mobile #logContainer {
   height: 40vh; /* Adjusted height for mobile */
 }
+html.mobile body {
+  background-color: #000080;
+  color: #e0e0e0;
+}
