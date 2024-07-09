@@ -1,6 +1,7 @@
 let port;
 let reader;
 let outputStream;
+let buffer = '';
 
 export async function connect(debug = false) {
   port = await navigator.serial.requestPort();
@@ -43,7 +44,12 @@ export async function readData(callback, debug = false) {
       if (done) break;
       const decodedData = decoder.decode(value);
       if (debug) console.log("Read data:", decodedData);
-      callback(decodedData);
+      buffer += decodedData;
+      let lines = buffer.split('\r');
+      buffer = lines.pop(); // Keep the last partial line in the buffer
+      for (const line of lines) {
+        callback(line);
+      }
     }
   } catch (error) {
     if (debug) console.error("Error reading data:", error);
