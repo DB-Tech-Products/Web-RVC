@@ -219,13 +219,19 @@ function processCanData(data) {
       const packet = packetsOfInterest.find(p => (parseInt(dgn, 16) & parseInt(p.dgn_mask, 16)) === parseInt(p.dgn_filter, 16));
       if (packet && sourceAddresses[sourceAddress].show) {
         logEntry.push(packet.name);
-        const params = packet.parameters.map(param => {
-          const value = extractParameter(payload, param.start_bit, param.length);
-          const translatedValue = param.translations ? param.translations[value] : value;
-          return `${param.name}: ${translatedValue}`;
-        }).join(', ');
-        logEntry.push(params);
-        addLogEntryToTable(logEntry, packet.text_color, packet.background_color);
+        if (payload.length !== 16) { // Bold the payload for non-8-byte packets
+          logEntry[4] = `<b>${payload}</b>`;
+          logEntry.push(''); // Leave the parameters column blank
+          addLogEntryToTable(logEntry, packet.text_color, packet.background_color, true);
+        } else {
+          const params = packet.parameters.map(param => {
+            const value = extractParameter(payload, param.start_bit, param.length);
+            const translatedValue = param.translations ? param.translations[value] : value;
+            return `${param.name}: ${translatedValue}`;
+          }).join(', ');
+          logEntry.push(params);
+          addLogEntryToTable(logEntry, packet.text_color, packet.background_color);
+        }
       } else if (showUnparsedCheckbox.checked && sourceAddresses[sourceAddress].show) {
         logEntry.push('');
         logEntry.push('');
@@ -239,14 +245,18 @@ function processCanData(data) {
   }
 }
 
-function addLogEntryToTable(logEntry, textColor = '', backgroundColor = '') {
+function addLogEntryToTable(logEntry, textColor = '', backgroundColor = '', isNon8BytePayload = false) {
   console.log("Adding log entry:", logEntry);
   const row = document.createElement('tr');
   if (textColor) row.style.color = textColor;
   if (backgroundColor) row.style.backgroundColor = backgroundColor;
-  logEntry.forEach(cellData => {
+  logEntry.forEach((cellData, index) => {
     const cell = document.createElement('td');
-    cell.textContent = cellData;
+    cell.innerHTML = cellData;
+    if (isNon8BytePayload && index === logEntry.length - 1) {
+      // Match the background color of the last cell with the page background
+      cell.style.backgroundColor = getComputedStyle(document.body).backgroundColor;
+    }
     row.appendChild(cell);
   });
   logTable.appendChild(row);
