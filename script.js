@@ -307,9 +307,9 @@ function updateSourceTable() {
     showCell.appendChild(showCheckbox);
 
     row.appendChild(addressCell);
+    row.appendChild(showCell);
     row.appendChild(countCell);
     row.appendChild(dgnsCell);
-    row.appendChild(showCell);
     sourceTable.appendChild(row);
   }
 }
