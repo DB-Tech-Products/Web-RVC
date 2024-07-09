@@ -101,7 +101,7 @@ function initializeApp() {
       console.log("Connected to serial port");
 
       // Perform health check
-      const isHealthy = await serial.healthCheck();
+      /*const isHealthy = await serial.healthCheck();
       if (!isHealthy) {
         console.error("Health check failed");
         alert("Failed to communicate with the CAN adapter. Please check the connection.");
@@ -109,7 +109,7 @@ function initializeApp() {
         return;
       }
       
-      console.log("Health check passed");
+      console.log("Health check passed");*/
 
       document.title = 'RV-C Tool: Connected';
       serial.readData(processCanData);

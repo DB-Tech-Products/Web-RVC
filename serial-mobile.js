@@ -1,38 +1,43 @@
 // serial-mobile.js
-import { PolyfillSerial } from 'web-serial-polyfill';
+import { serial as polyfill, SerialPort as SerialPortPolyfill } from 'https://unpkg.com/web-serial-polyfill';
 
 let port;
 let reader;
-let outputStream;
+let writer;
 
 export async function connect() {
-  port = await PolyfillSerial.requestPort();
-  await port.open({ baudRate: 250000 });
+    if ('serial' in navigator) {
+        port = await navigator.serial.requestPort();
+    } else {
+        polyfill.apply();
+        port = await SerialPortPolyfill.requestPort();
+    }
+    await port.open({ baudRate: 250000 });
 
-  reader = port.readable.getReader();
-  outputStream = port.writable.getWriter();
+    reader = port.readable.getReader();
+    writer = port.writable.getWriter();
 
-  await outputStream.write(new TextEncoder().encode('C\r'));  // Close CAN channel (if open)
-  await outputStream.write(new TextEncoder().encode('S5\r')); // Set CAN bit rate to 250000
-  await outputStream.write(new TextEncoder().encode('M0\r')); // Set Normal mode
-  await outputStream.write(new TextEncoder().encode('O\r'));  // Open CAN channel
+    await writer.write(new TextEncoder().encode('C\r')); // Close CAN channel (if open)
+    await writer.write(new TextEncoder().encode('S5\r')); // Set CAN bit rate to 250000
+    await writer.write(new TextEncoder().encode('M0\r')); // Set Normal mode
+    await writer.write(new TextEncoder().encode('O\r')); // Open CAN channel
 }
 
 export async function disconnect() {
-  try {
-    await outputStream.write(new TextEncoder().encode('C\r')); // Close CAN channel
-    await reader.cancel(); // Cancel the reader to release it
-    await reader.releaseLock(); // Release the reader lock
-    await outputStream.close(); // Close the writer stream
-    await port.close(); // Close the port
-    console.log("Disconnected from serial port");
-  } catch (error) {
-    console.error("Error during disconnect:", error);
-  }
+    try {
+        await writer.write(new TextEncoder().encode('C\r')); // Close CAN channel
+        await reader.cancel(); // Cancel the reader to release it
+        await reader.releaseLock(); // Release the reader lock
+        await writer.close(); // Close the writer stream
+        await port.close(); // Close the port
+        console.log("Disconnected from serial port");
+    } catch (error) {
+        console.error("Error during disconnect:", error);
+    }
 }
 
 export async function send(data) {
-  await outputStream.write(new TextEncoder().encode(data));
+    await writer.write(new TextEncoder().encode(data));
 }
 
 export async function readData(callback) {
@@ -47,20 +52,5 @@ export async function readData(callback) {
     }
   } catch (error) {
     console.error("Error reading data:", error);
-  }
-}
-
-export async function healthCheck() {
-  const decoder = new TextDecoder();
-  await outputStream.write(new TextEncoder().encode('V\r')); // Version command or any health check command
-  try {
-    const { value, done } = await reader.read();
-    if (done) return false;
-    const response = decoder.decode(value);
-    console.log("Health check response:", response);
-    return true;
-  } catch (error) {
-    console.error("Health check error:", error);
-    return false;
   }
 }
