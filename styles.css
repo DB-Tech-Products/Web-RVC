@@ -81,3 +81,34 @@ footer a {
     border-top: 1px solid #444;
   }
 }
+
+@media (max-width: 600px) {
+  button, input[type="file"], select, input[type="text"] {
+    width: 100%;
+    font-size: 1.2em;
+    padding: 10px;
+  }
+
+  #logContainer {
+    height: 50vh;
+  }
+
+  #logTable th, #logTable td {
+    padding: 10px;
+  }
+
+  label {
+    display: block;
+    margin: 10px 0;
+    font-size: 1.2em;
+  }
+
+  #logSection {
+    margin-bottom: 10px;
+  }
+
+  #sourceSection {
+    clear: both;
+    margin-top: 20px;
+  }
+}
