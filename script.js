@@ -1,3 +1,4 @@
+// script.js
 const connectButton = document.getElementById('connectButton');
 const disconnectButton = document.getElementById('disconnectButton');
 const clearButton = document.getElementById('clearButton');
@@ -15,12 +16,25 @@ const sourceTable = document.getElementById('sourceTable').querySelector('tbody'
 const fileInput = document.getElementById('fileInput');
 const uploadStatus = document.getElementById('uploadStatus');
 
-let port;
-let reader;
-let outputStream;
+let serial;
 let paused = false;
 let sourceAddresses = {};
 let packetsOfInterest = [];
+
+// Load the appropriate serial module
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+  import('./serial-mobile.js').then(module => {
+    serial = module;
+    console.log("Loaded serial-mobile.js");
+    initializeApp();
+  }).catch(error => console.error("Error loading serial-mobile.js:", error));
+} else {
+  import('./serial.js').then(module => {
+    serial = module;
+    console.log("Loaded serial.js");
+    initializeApp();
+  }).catch(error => console.error("Error loading serial.js:", error));
+}
 
 // Load the default JSON file
 fetch('rvc.json')
@@ -79,115 +93,108 @@ function generatePacketDefinitionsTable(packets) {
   }
 }
 
-connectButton.addEventListener('click', async () => {
-  try {
-    port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 250000 });
-    document.title = 'RV-C Tool: Connected';
+function initializeApp() {
+  console.log("Initializing app");
+  connectButton.addEventListener('click', async () => {
+    try {
+      await serial.connect();
+      console.log("Connected to serial port");
 
-    reader = port.readable.getReader();
-    outputStream = port.writable.getWriter();
-
-    await outputStream.write(new TextEncoder().encode('O\r')); // Open CAN channel
-    await outputStream.write(new TextEncoder().encode('S5\r')); // Set CAN bit rate to 250000
-
-    readData();
-
-    connectButton.disabled = true;
-    disconnectButton.disabled = false;
-    sendButton.disabled = false;
-    pauseButton.disabled = false;
-  } catch (error) {
-    document.title = 'RV-C Tool: Error Connecting';
-    console.error(error);
-  }
-});
-
-disconnectButton.addEventListener('click', async () => {
-  try {
-    await outputStream.write(new TextEncoder().encode('C\r')); // Close CAN channel
-    await reader.cancel();
-    await port.close();
-    document.title = 'RV-C Tool: Disconnected';
-
-    connectButton.disabled = false;
-    disconnectButton.disabled = true;
-    sendButton.disabled = true;
-    pauseButton.disabled = true;
-  } catch (error) {
-    document.title = 'RV-C Tool: Error Disconnecting';
-    console.error(error);
-  }
-});
-
-sendButton.addEventListener('click', async () => {
-  const priority = prioritySelect.value;
-  const dgn = dgnInput.value;
-  const sourceAddr = sourceAddrInput.value;
-  const payload = payloadInput.value.replace(/[^0-9a-fA-F]/g, '');
-  if (dgn.length !== 5 || !/^[0-1]/.test(dgn)) {
-    alert('DGN must be 5 hex digits and start with 0 or 1.');
-    return;
-  }
-  if (sourceAddr.length !== 2 || !/^[0-9a-fA-F]{2}$/.test(sourceAddr)) {
-    alert('Source Address must be 2 hex digits.');
-    return;
-  }
-  const id = `${priority}${dgn}${sourceAddr}`;
-  const len = (payload.length / 2).toString(16).toUpperCase().padStart(1, '0');
-  const command = `T${id}${len}${payload}\r`;
-
-  await outputStream.write(new TextEncoder().encode(command));
-  dgnInput.value = '';
-  sourceAddrInput.value = '';
-  payloadInput.value = '';
-});
-
-clearButton.addEventListener('click', () => {
-  logTable.innerHTML = '';
-  sourceAddresses = {};
-  updateSourceTable();
-});
-
-exportCsvButton.addEventListener('click', () => {
-  const csvContent = getCsvContent();
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'RVC_Log.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-pauseButton.addEventListener('click', () => {
-  paused = !paused;
-  pauseButton.textContent = paused ? 'Resume' : 'Pause';
-});
-
-async function readData() {
-  const decoder = new TextDecoder();
-  try {
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) {
-        break;
+      // Perform health check
+      const isHealthy = await serial.healthCheck();
+      if (!isHealthy) {
+        console.error("Health check failed");
+        alert("Failed to communicate with the CAN adapter. Please check the connection.");
+        await serial.disconnect();
+        return;
       }
-      if (!paused) {
-        const text = decoder.decode(value);
-        processCanData(text);
-      }
+      
+      console.log("Health check passed");
+
+      document.title = 'RV-C Tool: Connected';
+      serial.readData(processCanData);
+
+      connectButton.disabled = true;
+      disconnectButton.disabled = false;
+      sendButton.disabled = false;
+      pauseButton.disabled = false;
+    } catch (error) {
+      document.title = 'RV-C Tool: Error Connecting';
+      console.error('Error:', error);
     }
-  } catch (error) {
-    console.error(error);
-  }
+  });
+
+  disconnectButton.addEventListener('click', async () => {
+    try {
+      await serial.disconnect();
+      console.log("Disconnected from serial port");
+      document.title = 'RV-C Tool: Disconnected';
+
+      connectButton.disabled = false;
+      disconnectButton.disabled = true;
+      sendButton.disabled = true;
+      pauseButton.disabled = true;
+    } catch (error) {
+      document.title = 'RV-C Tool: Error Disconnecting';
+      console.error('Error:', error);
+    }
+  });
+
+  sendButton.addEventListener('click', async () => {
+    const priority = prioritySelect.value;
+    const dgn = dgnInput.value;
+    const sourceAddr = sourceAddrInput.value;
+    const payload = payloadInput.value.replace(/[^0-9a-fA-F]/g, '');
+    if (dgn.length !== 5 || !/^[0-1]/.test(dgn)) {
+      alert('DGN must be 5 hex digits and start with 0 or 1.');
+      return;
+    }
+    if (sourceAddr.length !== 2 || !/^[0-9a-fA-F]{2}$/.test(sourceAddr)) {
+      alert('Source Address must be 2 hex digits.');
+      return;
+    }
+    const id = `${priority}${dgn}${sourceAddr}`;
+    const len = (payload.length / 2).toString(16).toUpperCase().padStart(1, '0');
+    const command = `T${id}${len}${payload}\r`;
+
+    await serial.send(command);
+    console.log(`Sent command: ${command}`);
+    dgnInput.value = '';
+    sourceAddrInput.value = '';
+    payloadInput.value = '';
+  });
+
+  clearButton.addEventListener('click', () => {
+    logTable.innerHTML = '';
+    sourceAddresses = {};
+    updateSourceTable();
+  });
+
+  exportCsvButton.addEventListener('click', () => {
+    const csvContent = getCsvContent();
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'RVC_Log.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  pauseButton.addEventListener('click', () => {
+    paused = !paused;
+    pauseButton.textContent = paused ? 'Resume' : 'Pause';
+  });
 }
 
 function processCanData(data) {
+  console.log("Processing CAN data:", data);
   const includeDate = document.getElementById('includeDate').checked;
   const lines = data.trim().split('\r');
+  console.log("CAN data lines:", lines);
   for (const line of lines) {
     if (line.startsWith('T') && line.length >= 11) {
+      console.log("Processing line:", line);
       const id = line.substring(1, 9);
       const dgn = (parseInt(id.substring(1, 2), 16) & 1).toString(16) + id.substring(2, 6);
       const sourceAddress = id.substring(6, 8);
@@ -229,11 +236,14 @@ function processCanData(data) {
       } else {
         continue; // Skip logging this entry if showUnparsed is not checked
       }
+    } else {
+      console.log("Ignoring line:", line);
     }
   }
 }
 
 function addLogEntryToTable(logEntry, textColor = '', backgroundColor = '') {
+  console.log("Adding log entry:", logEntry);
   const row = document.createElement('tr');
   if (textColor) row.style.color = textColor;
   if (backgroundColor) row.style.backgroundColor = backgroundColor;
@@ -259,6 +269,7 @@ function extractParameter(payload, startBit, length) {
 }
 
 function updateSourceTable() {
+  console.log("Updating source table");
   sourceTable.innerHTML = '';
   const sortedAddresses = Object.entries(sourceAddresses).sort((a, b) => b[1].count - a[1].count);
   for (const [address, info] of sortedAddresses) {
@@ -285,9 +296,10 @@ function updateSourceTable() {
 }
 
 function getCsvContent() {
+  console.log("Generating CSV content");
   const rows = Array.from(logTable.querySelectorAll('tr'));
   const csvContent = rows.map(row => {
-    const cols = Array.from(row.querySelectorAll('td')). map(td => td.textContent);
+    const cols = Array.from(row.querySelectorAll('td')).map(td => td.textContent);
     return cols.join(',');
   }).join('\n');
   return csvContent;
