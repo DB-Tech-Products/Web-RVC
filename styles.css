@@ -55,12 +55,19 @@ footer {
   background-color: #f0f0f0;
   color: #000;
   text-align: center;
-  padding: 0px;
+  padding: 5px;
   border-top: 1px solid #ccc;
 }
 
 footer a {
   color: inherit;
+}
+
+footer label {
+  position: absolute;
+  right: 30px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 @media (prefers-color-scheme: dark) {

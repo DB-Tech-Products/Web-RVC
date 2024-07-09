@@ -14,23 +14,30 @@ const logTable = document.getElementById('logTable').querySelector('tbody');
 const sourceTable = document.getElementById('sourceTable').querySelector('tbody');
 const fileInput = document.getElementById('fileInput');
 const uploadStatus = document.getElementById('uploadStatus');
+const toggleDebugCheckbox = document.getElementById('toggleDebugCheckbox');
 
 let serial;
 let paused = false;
 let sourceAddresses = {};
 let packetsOfInterest = [];
+let debug = false;
+
+toggleDebugCheckbox.addEventListener('change', () => {
+  debug = toggleDebugCheckbox.checked;
+  console.log(`Debug mode is now ${debug ? 'on' : 'off'}`);
+});
 
 // Load the appropriate serial module
 if (/Mobi|Android/i.test(navigator.userAgent)) {
   import('./serial-mobile.js').then(module => {
     serial = module;
-    console.log("Loaded serial-mobile.js");
+    if (debug) console.log("Loaded serial-mobile.js");
     initializeApp();
   }).catch(error => console.error("Error loading serial-mobile.js:", error));
 } else {
   import('./serial.js').then(module => {
     serial = module;
-    console.log("Loaded serial.js");
+    if (debug) console.log("Loaded serial.js");
     initializeApp();
   }).catch(error => console.error("Error loading serial.js:", error));
 }
@@ -93,14 +100,14 @@ function generatePacketDefinitionsTable(packets) {
 }
 
 function initializeApp() {
-  console.log("Initializing app");
+  if (debug) console.log("Initializing app");
   connectButton.addEventListener('click', async () => {
     try {
-      await serial.connect();
-      console.log("Connected to serial port");
+      await serial.connect(debug);
+      if (debug) console.log("Connected to serial port");
 
       document.title = 'RV-C Tool: Connected';
-      serial.readData(processCanData);
+      serial.readData(processCanData, debug);
 
       connectButton.disabled = true;
       disconnectButton.disabled = false;
@@ -114,8 +121,8 @@ function initializeApp() {
 
   disconnectButton.addEventListener('click', async () => {
     try {
-      await serial.disconnect();
-      console.log("Disconnected from serial port");
+      await serial.disconnect(debug);
+      if (debug) console.log("Disconnected from serial port");
       document.title = 'RV-C Tool: Disconnected';
 
       connectButton.disabled = false;
@@ -145,8 +152,8 @@ function initializeApp() {
     const len = (payload.length / 2).toString(16).toUpperCase().padStart(1, '0');
     const command = `T${id}${len}${payload}\r`;
 
-    await serial.send(command);
-    console.log(`Sent command: ${command}`);
+    await serial.send(command, debug);
+    if (debug) console.log(`Sent command: ${command}`);
     dgnInput.value = '';
     sourceAddrInput.value = '';
     payloadInput.value = '';
@@ -179,13 +186,13 @@ function initializeApp() {
 }
 
 function processCanData(data) {
-  console.log("Processing CAN data:", data);
+  if (debug) console.log("Processing CAN data:", data);
   const includeDate = document.getElementById('includeDate').checked;
   const lines = data.trim().split('\r');
-  console.log("CAN data lines:", lines);
+  if (debug) console.log("CAN data lines:", lines);
   for (const line of lines) {
     if (line.startsWith('T') && line.length >= 11) {
-      console.log("Processing line:", line);
+      if (debug) console.log("Processing line:", line);
       const id = line.substring(1, 9);
       const dgn = (parseInt(id.substring(1, 2), 16) & 1).toString(16) + id.substring(2, 6);
       const sourceAddress = id.substring(6, 8);
@@ -240,13 +247,13 @@ function processCanData(data) {
         continue; // Skip logging this entry if showUnparsed is not checked
       }
     } else {
-      console.log("Ignoring line:", line);
+      if (debug) console.log("Ignoring line:", line);
     }
   }
 }
 
 function addLogEntryToTable(logEntry, textColor = '', backgroundColor = '', isNon8BytePayload = false) {
-  console.log("Adding log entry:", logEntry);
+  if (debug) console.log("Adding log entry:", logEntry);
   const row = document.createElement('tr');
   if (textColor) row.style.color = textColor;
   if (backgroundColor) row.style.backgroundColor = backgroundColor;
@@ -276,7 +283,7 @@ function extractParameter(payload, startBit, length) {
 }
 
 function updateSourceTable() {
-  console.log("Updating source table");
+  if (debug) console.log("Updating source table");
   sourceTable.innerHTML = '';
   const sortedAddresses = Object.entries(sourceAddresses).sort((a, b) => b[1].count - a[1].count);
   for (const [address, info] of sortedAddresses) {
@@ -300,15 +307,15 @@ function updateSourceTable() {
     showCell.appendChild(showCheckbox);
 
     row.appendChild(addressCell);
-    row.appendChild(showCell);
     row.appendChild(countCell);
     row.appendChild(dgnsCell);
+    row.appendChild(showCell);
     sourceTable.appendChild(row);
   }
 }
 
 function getCsvContent() {
-  console.log("Generating CSV content");
+  if (debug) console.log("Generating CSV content");
   const rows = Array.from(logTable.querySelectorAll('tr'));
   const csvContent = rows.map(row => {
     const cols = Array.from(row.querySelectorAll('td')).map(td => td.textContent);
