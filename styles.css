@@ -100,7 +100,31 @@ html.mobile label {
 html.mobile #logContainer {
   height: 40vh; /* Adjusted height for mobile */
 }
-html.mobile body {
+/*html.mobile body {
   background-color: #000030;
   color: #e0e0e0;
+}*/
+
+/* Additional mobile improvements */
+html.mobile button, html.mobile input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+html.mobile #logSection {
+  margin-bottom: 10px;
+}
+html.mobile #sourceTable {
+  width: 100%;
+  float: none;
+}
+html.mobile #sourceTable th, html.mobile #sourceTable td {
+  padding: 10px;
+}
+html.mobile footer {
+  text-align: center;
+}
+html.mobile footer label {
+  position: static;
+  display: block;
+  margin-top: 10px;
 }
